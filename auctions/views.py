@@ -63,4 +63,14 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def add(request):
-    return render(request, "auctions/add.html")
+        if request.method == "GET":
+            return render(request, "auctions/add.html")
+        else:
+            title = request.POST["title"]
+            description = request.POST["description"]
+            initial_bid = request.POST["initial-bid"]
+            return render(request, "auctions/index.html", {
+                "title": title,
+                "description": description,
+                "initial_bid": initial_bid
+            })
