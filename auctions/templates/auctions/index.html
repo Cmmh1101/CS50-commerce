@@ -7,5 +7,22 @@
 
     {% if title %}
         <h1>{{ title }}</h1>
+        <table>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Initial Bid</th>
+              <th>Category</th>
+              <th>Url</th>
+            </tr>
+            <tr>
+              <td class="col-2">{{ title }}</td>
+              <td class="col-4">{{ description }}</td>
+              <td class="col-2">$ {{ initial_bid }}</td>
+              <td class="col-2">{{ category }}</td>
+              <td class="col-2">{{ url }}</td>
+            </tr>
+          </table>
     {% endif %}
+
 {% endblock %}

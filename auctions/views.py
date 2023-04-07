@@ -69,8 +69,12 @@ def add(request):
             title = request.POST["title"]
             description = request.POST["description"]
             initial_bid = request.POST["initial-bid"]
+            category = request.POST["category"]
+            url = request.POST["url"]
             return render(request, "auctions/index.html", {
                 "title": title,
                 "description": description,
-                "initial_bid": initial_bid
+                "initial_bid": initial_bid,
+                "category": category,
+                "url": url
             })
