@@ -5,17 +5,28 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-# class ActionListings(models.Model):
-#     title = models.CharField(max_length=64, blank=False, related_name="listings")
-#     description = models.CharField(max_length=200)
-#     initial_bid = models.IntegerField()
-#     category = models.CharField(max_length=64)
-#     url = models.CharField(max_length=200)
+class Category(models.Model):
+    categoryName = models.CharField(max_length=64)
 
-# class Bids(models.Model):
+    def __str__(self):
+        return self.categoryName
+
+class Listing(models.Model):
+    title = models.CharField(max_length=64)
+    description = models.CharField(max_length=400)
+    initial_bid = models.FloatField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category")
+    url = models.CharField(max_length=2000)
+    isActive = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="user")
+
+    def __str__(self):
+        return self.title
+
+# class Bid(models.Model):
 #     pass
 
-# class Comments(models.Model):
+# class Comment(models.Model):
 #     pass
 
 
