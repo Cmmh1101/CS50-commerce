@@ -9,9 +9,10 @@ from .models import User, Category, Listing
 
 def index(request):
     activeListings = Listing.objects.filter(isActive=True)
-
+    categories = Category.objects.all()
     return render(request, "auctions/index.html", {
-        "activeListings": activeListings 
+        "activeListings": activeListings,
+        "categories": categories
     })
 
 
@@ -93,3 +94,24 @@ def add(request):
             listing.save()
 
             return HttpResponseRedirect(reverse("index"))
+
+def category(request):
+    if request.method == "POST": 
+        category_selected = request.POST['category']
+        category = Category.objects.get(categoryName=category_selected)
+        activeListings = Listing.objects.filter(isActive=True, category=category)
+        categories = Category.objects.all()
+        return render(request, "auctions/index.html", {
+            "activeListings": activeListings,
+            "categories": categories
+        })
+
+def listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    user = request.user
+    # for car in listing:
+    #     car 
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "user": user
+    })

@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+    <div class="row d-flex mt-3">
+        <div class="col">
+            <img src="{{ listing.url }}" class="img-fluid rounded-start" alt="{{ listing.title }}" style="width: 300px; height: 300px;">
+            {% if user.is_authenticated %}
+                <p>bid here</p>
+                <p>Watch list</p>
+            {% endif %}
+            {% if user == listing.owner %}
+                <button type="submit" class="btn btn-warning">Close auction</button>
+            {% endif %}
+            <h2 class="mt-5">Item: {{listing.title}}</h2>
+            <p class="text-capitalize"><strong>Category: </strong>{{ listing.category }}</p>
+            <p class="text-capitalize"><strong>Owner: </strong>{{ listing.owner }}</p>
+            {% if listing.isActive %}
+            <p class="text-capitalize"><strong>Listing Status: </strong>Active</p>
+            {% else %}
+            <p class="text-capitalize"><strong>Listing Status: </strong>Inactive</p>
+            {% endif %}
+            <p class="text-capitalize"><strong>Initial bid: $</strong>{{ listing.initial_bid }}</p>
+            <p class="text-capitalize"><strong>Description: </strong>{{ listing.description }}</p>
+        </div>
+    </div>
+
+{% endblock %}

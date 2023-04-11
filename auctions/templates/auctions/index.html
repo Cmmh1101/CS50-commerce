@@ -2,11 +2,37 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
-    {% if activeListings %}
+    <form action="{% url 'category' %}" method="POST" class="col-5 d-flex align-items-center m-3">
+      {% csrf_token %}
+      <label for="#category" class="mr-3">Category: </label>
+      <select class="form-control" name="category" id="category">
+          {% for category in categories %}
+          <option value="{{ category }}">
+              {{ category }}
+          </option>
+          {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+    <div class="row d-flex mt-5">
       {% for listing in activeListings %}
-        <h1>{{ listing.title }}</h1>
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ listing.url }}" class="img-fluid rounded-start" alt="{{ listing.title }}" style="width: 100%; height: 100%;">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title text-capitalize">{{ listing.title }}</h5>
+              <p class="card-text">{{ listing.description }}</p>
+              <p class="card-text"><strong>$ {{ listing.initial_bid }}</strong></p>
+              <a href="{% url 'listing' listing_id=listing.id %}" class="btn btn-primary">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {% endfor%}
-    {% endif %}
+    </div>
 
 {% endblock %}
