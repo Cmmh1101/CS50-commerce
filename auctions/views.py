@@ -109,9 +109,29 @@ def category(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     user = request.user
-    # for car in listing:
-    #     car 
+    isInWatchlist = request.user in listing.watchlist.all()
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "user": user
+        "user": user,
+        "isInWatchlist": isInWatchlist
     })
+
+def removeWatchlist(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    user = request.user
+    listing.watchlist.remove(user)
+    return HttpResponseRedirect(reverse("listing", args=(listing_id, )))
+
+def addWatchlist(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    user = request.user
+    listing.watchlist.add(user)
+    return HttpResponseRedirect(reverse("listing", args=(listing_id, )))
+
+def watchlist(request):
+    currUser = request.user
+    listings = currUser.listingWatchList.all()
+    return render(request, "auctions/watchlist.html", {
+        "listings": listings
+    })
+

@@ -2,11 +2,29 @@
 <div class="row d-flex flex-column">
   {% if user.is_authenticated %}
   <form class="d-flex align-items-center" action="" method="POST">
+    {% csrf_token %}
     <label for="#new-bid" class="mb-0 mr-2"> Add your new bid: </label>
     <input type="number" class="mr-2" id="new-bid" min="{{listing.initial_bid}}" />
     <button class="btn btn-primary" type="submit">Send Bid</button>
   </form>
-  <button class="btn btn-info my-3" type="submit">Watch list</button>
+
+  
+    {% if isInWatchlist %}
+        <form action="{% url 'removeWatchlist' listing_id=listing.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-warning my-3" type="submit">
+                Remove
+            </button>
+        </form>
+    {% else %}
+    <form action="{% url 'addWatchlist' listing_id=listing.id %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-info my-3" type="submit">
+            Add
+        </button>
+    </form>
+    {% endif %}
+ 
   {% if user == listing.owner %}
   <button type="submit" class="btn btn-warning">Close auction</button>
   {% endif %} {% endif %}

@@ -1,0 +1,34 @@
+{% extends "auctions/layout.html" %} {% block body %}
+<h2>Watchlist</h2>
+
+<div class="row d-flex mt-5">
+  {% for listing in listings %}
+  <div class="card mb-3" style="max-width: 540px">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="{{ listing.url }}"
+          class="img-fluid rounded-start"
+          alt="{{ listing.title }}"
+          style="width: 100%; height: 100%"
+        />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title text-capitalize">{{ listing.title }}</h5>
+          <p class="card-text">{{ listing.description }}</p>
+          <p class="card-text"><strong>$ {{ listing.initial_bid }}</strong></p>
+          <a
+            href="{% url 'listing' listing_id=listing.id %}"
+            class="btn btn-primary"
+            >View Details</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endfor%}
+</div>
+
+{% endblock %}
