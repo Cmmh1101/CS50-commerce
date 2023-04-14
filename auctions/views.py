@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Category, Listing
+from .models import User, Category, Listing, Comment, Bid
 
 
 def index(request):
@@ -79,16 +79,18 @@ def add(request):
             initial_bid = request.POST["initial-bid"]
             category = request.POST["category"]
             url = request.POST["url"]
-            user = request.user
+            currentUser = request.user
+            bid = Bid(bid=float(initial_bid), user=currentUser)
+            bid.save()
             selectedCategory = Category.objects.get(categoryName=category)
 
             listing = Listing(
                 title = title,
                 description = description,
-                initial_bid =float(initial_bid),
+                initial_bid = bid,
                 category = selectedCategory,
                 url = url,
-                owner = user
+                owner = currentUser
             )
 
             listing.save()
@@ -110,10 +112,12 @@ def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     user = request.user
     isInWatchlist = request.user in listing.watchlist.all()
+    comments = Comment.objects.filter(listing=listing)
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "user": user,
-        "isInWatchlist": isInWatchlist
+        "isInWatchlist": isInWatchlist,
+        "comments": comments
     })
 
 def removeWatchlist(request, listing_id):
@@ -134,4 +138,37 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "listings": listings
     })
+
+def addComment(request, listing_id):
+    currUser = request.user
+    listing = Listing.objects.get(pk=listing_id)
+    message = request.POST['comment']
+
+    newMessage = Comment(
+        author = currUser,
+        listing = listing,
+        listingComment = message
+    )
+    newMessage.save()
+
+def updateBid(request, listing_id):
+    new_bid = request.POST.get("newBid")
+    listing = Listing.objects.get(pk=listing_id)
+    currentUser = request.user
+    if int(new_bid) > listing.initial_bid.bid:
+        bid = Bid(bid=int(new_bid), user=currentUser)
+        bid.save()
+        listing.initial_bid = bid
+        listing.save()
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "message": "Your bid was suscessfully updated!",
+            "update": True
+        })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "message": "There has been an error. Please try again later!",
+            "update": False
+        })
 
