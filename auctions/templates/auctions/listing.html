@@ -72,7 +72,7 @@
   </div>
 </div>
 
-<div>
+<div class="card w-50 p-3 bg-light">
   <h3>Comments:</h3>
   {% if user.is_authenticated %}
   <form action="{% url 'addComment' listing.id %}" method="POST">
@@ -86,9 +86,12 @@
     />
     <button type="submit" class="btn btn-primary">Add comment</button>
   </form>
-  {% endif%} {% for comment in comments %}
-  <p>Author: {{ comment.author }}</p>
-  <p>{{ comment.listingComment }}</p>
+  {% endif%} 
+  {% for comment in comments %}
+  <div class="card p-1 my-2">
+    <p class="mb-0">{{ comment.listingComment }}</p>
+    <p class="mb-0 small capitalized text-capitalize">Author: {{ comment.author }}</p>
+  </div>
   {% endfor %}
 </div>
 

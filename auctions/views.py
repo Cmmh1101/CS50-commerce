@@ -143,6 +143,8 @@ def addComment(request, listing_id):
     currUser = request.user
     listing = Listing.objects.get(pk=listing_id)
     message = request.POST['comment']
+    isInWatchlist = request.user in listing.watchlist.all()
+    comments = Comment.objects.filter(listing=listing)
 
     newMessage = Comment(
         author = currUser,
@@ -150,11 +152,19 @@ def addComment(request, listing_id):
         listingComment = message
     )
     newMessage.save()
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "user": currUser,
+        "isInWatchlist": isInWatchlist,
+        "comments": comments
+    })
 
 def updateBid(request, listing_id):
     new_bid = request.POST.get("new-bid", False)
     listing = Listing.objects.get(pk=listing_id)
     currentUser = request.user
+    isInWatchlist = request.user in listing.watchlist.all()
+    comments = Comment.objects.filter(listing=listing)
     if int(new_bid) > listing.initial_bid.bid:
         updatedBid = Bid(bid=int(new_bid), user=currentUser)
         updatedBid.save()
@@ -164,13 +174,16 @@ def updateBid(request, listing_id):
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "Your bid was suscessfully updated!",
-            "update": True
+            "update": True,
         })
     else:
         print(new_bid)
         return render(request, "auctions/listing.html", {
             "listing": listing,
-            "message": "There has been an error. Please try again later!",
-            "update": False
+            "message": "The new bid should be grater than the current. Please try again!",
+            "update": False,
         })
+
+def closeAuction(request, listing_id):
+    return render(request, "")
 
