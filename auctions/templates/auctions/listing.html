@@ -1,5 +1,8 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <div class="row d-flex flex-column">
+    <p class="text-capitalize">
+        <strong>Current bid: $ </strong>{{listing.initial_bid.bid}}
+    </p>
   {% if user.is_authenticated %}
   {% if message %}
     {% if update %}
@@ -14,11 +17,12 @@
   {% endif %}
   <form class="d-flex align-items-center" action="{% url 'updateBid' listing_id=listing.id %}" method="POST">
     {% csrf_token %}
-    <label for="#newBid" class="mb-0 mr-2"> Add your new bid: </label>
+    <label for="#new-bid" class="mb-0 mr-2"> Add your bid: </label>
     <input
       type="number"
       class="mr-2"
-      id="newBid"
+      id="new-bid"
+      name="new-bid"
       value="{{listing.initial_bid.bid}}"
       min="{{listing.initial_bid.bid}}"
     />
@@ -58,13 +62,10 @@
     </p>
     <p class="text-capitalize"><strong>Owner: </strong>{{ listing.owner }}</p>
     {% if listing.isActive %}
-    <p class="text-capitalize"><strong>Listing Status: </strong>Active</p>
+        <p class="text-capitalize"><strong>Listing Status: </strong>Active</p>
     {% else %}
-    <p class="text-capitalize"><strong>Listing Status: </strong>Inactive</p>
+        <p class="text-capitalize"><strong>Listing Status: </strong>Inactive</p>
     {% endif %}
-    <p class="text-capitalize">
-      <strong>Initial bid: $</strong>{{ listing.initial_bid }}
-    </p>
     <p class="text-capitalize">
       <strong>Description: </strong>{{ listing.description }}
     </p>

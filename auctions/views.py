@@ -152,20 +152,22 @@ def addComment(request, listing_id):
     newMessage.save()
 
 def updateBid(request, listing_id):
-    new_bid = request.POST.get("newBid")
+    new_bid = request.POST.get("new-bid", False)
     listing = Listing.objects.get(pk=listing_id)
     currentUser = request.user
     if int(new_bid) > listing.initial_bid.bid:
-        bid = Bid(bid=int(new_bid), user=currentUser)
-        bid.save()
-        listing.initial_bid = bid
+        updatedBid = Bid(bid=int(new_bid), user=currentUser)
+        updatedBid.save()
+        listing.initial_bid = updatedBid
         listing.save()
+        print(new_bid)
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "Your bid was suscessfully updated!",
             "update": True
         })
     else:
+        print(new_bid)
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "There has been an error. Please try again later!",
