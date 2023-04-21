@@ -17,7 +17,7 @@
         <div class="card-body">
           <h5 class="card-title text-capitalize">{{ listing.title }}</h5>
           <p class="card-text">{{ listing.description }}</p>
-          <p class="card-text"><strong>$ {{ listing.initial_bid }}</strong></p>
+          <p class="card-text"><strong>$ {{ listing.initial_bid.bid }}</strong></p>
           <a
             href="{% url 'listing' listing_id=listing.id %}"
             class="btn btn-primary"

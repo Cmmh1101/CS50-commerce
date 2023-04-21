@@ -113,11 +113,14 @@ def listing(request, listing_id):
     user = request.user
     isInWatchlist = request.user in listing.watchlist.all()
     comments = Comment.objects.filter(listing=listing)
+    isListingOwner = request.user == listing.owner
+    # bidWinner = 
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "user": user,
         "isInWatchlist": isInWatchlist,
-        "comments": comments
+        "comments": comments,
+        "isListingOwner": isListingOwner
     })
 
 def removeWatchlist(request, listing_id):
@@ -157,6 +160,7 @@ def addComment(request, listing_id):
         "user": currUser,
         "isInWatchlist": isInWatchlist,
         "comments": comments
+
     })
 
 def updateBid(request, listing_id):
@@ -165,6 +169,7 @@ def updateBid(request, listing_id):
     currentUser = request.user
     isInWatchlist = request.user in listing.watchlist.all()
     comments = Comment.objects.filter(listing=listing)
+    isListingOwner = request.user == listing.owner
     if int(new_bid) > listing.initial_bid.bid:
         updatedBid = Bid(bid=int(new_bid), user=currentUser)
         updatedBid.save()
@@ -175,6 +180,7 @@ def updateBid(request, listing_id):
             "listing": listing,
             "message": "Your bid was suscessfully updated!",
             "update": True,
+            "isListingOwner": isListingOwner
         })
     else:
         print(new_bid)
@@ -182,8 +188,24 @@ def updateBid(request, listing_id):
             "listing": listing,
             "message": "The new bid should be grater than the current. Please try again!",
             "update": False,
+            "isListingOwner": isListingOwner
         })
 
 def closeAuction(request, listing_id):
-    return render(request, "")
+    listing = Listing.objects.get(pk=listing_id)
+    isInWatchlist = request.user in listing.watchlist.all()
+    comments = Comment.objects.filter(listing=listing)
+    isListingOwner = request.user == listing.owner
+    listing.isActive = False
+    listing.save()
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "user": request.user,
+        "isInWatchlist": isInWatchlist,
+        "comments": comments,
+        "isListingOwner": isListingOwner,
+        "message": "Congrats!! You successfully closed your auction",
+        "update": True
+    })
+
 
