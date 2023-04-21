@@ -105,7 +105,8 @@ def category(request):
         categories = Category.objects.all()
         return render(request, "auctions/index.html", {
             "activeListings": activeListings,
-            "categories": categories
+            "categories": categories,
+            "activeFilter": category
         })
 
 def listing(request, listing_id):
