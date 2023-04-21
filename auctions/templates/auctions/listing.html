@@ -5,75 +5,72 @@
             </div>
     {% endif %}
 
-    <div class="row d-flex flex-column">
-        <p class="text-capitalize">
-            <strong>Current bid: $ </strong>{{listing.initial_bid.bid}}
-        </p>
-    {% if user.is_authenticated and listing.isActive %}
-    
-        {% if message %}
-            {% if update %}
-                <div class="alert alert-success">
-                    <strong>{{ message }}</strong>
-                </div>
-            {% else %}
-                <div class="alert alert-danger">
-                    <strong>{{ message }}</strong>
-                </div>
-            {% endif %}
-        {% endif %}
-        <form class="d-flex align-items-center" action="{% url 'updateBid' listing_id=listing.id %}" method="POST">
-            {% csrf_token %}
-            <label for="#new-bid" class="mb-0 mr-2"> Add your bid: </label>
-            <input
-            type="number"
-            class="mr-2"
-            id="new-bid"
-            name="new-bid"
-            value="{{listing.initial_bid.bid}}"
-            min="{{listing.initial_bid.bid}}"
-            />
-            <button class="btn btn-primary" type="submit">Send Bid</button>
-        </form>
-        {% if isListingOwner %}
-            <form action="{% url 'closeAuction'  listing_id=listing.id %}" method="POST" class="mt-2">
-                {% csrf_token %}
-                <button class="btn btn-warning my-3" type="submit">Close Auction</button>
-            </form>
-        {% endif %}
-
-        {% if isInWatchlist %}
-            <form
-                action="{% url 'removeWatchlist' listing_id=listing.id %}"
-                method="POST"
-            >
-                {% csrf_token %}
-                <button class="btn btn-warning my-3" type="submit">Remove from my watchlist</button>
-            </form>
-        {% else %}
-            <form action="{% url 'addWatchlist' listing_id=listing.id %}" method="POST">
-                {% csrf_token %}
-                <button class="btn btn-info my-3" type="submit">Add to my watchlist</button>
-            </form>
-        {% endif %} 
-    {% endif %}
-    
-    </div>
-
     <div class="row d-flex mt-3">
     <div class="col">
+        <h2 class="mt-5 text-capitalize">Listing: {{listing.title}}</h2>
+        <p class="text-capitalize">
         <img
         src="{{ listing.url }}"
         class="img-fluid rounded-start"
         alt="{{ listing.title }}"
         style="width: 300px; height: 300px"
         />
-
-        <h2 class="mt-5">Item: {{listing.title}}</h2>
-        <p class="text-capitalize">
+        <p class="text-capitalize lead font-weight-bolder">
+            $ {{listing.initial_bid.bid}}
+        </p>
+        <div class="row d-flex flex-column">
+            <div class="col">
+                {% if user.is_authenticated and listing.isActive %}
+                    {% if message %}
+                        {% if update %}
+                            <div class="alert alert-success">
+                                <strong>{{ message }}</strong>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <strong>{{ message }}</strong>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <form class="d-flex align-items-center" action="{% url 'updateBid' listing_id=listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <input
+                        type="number"
+                        class="mr-2"
+                        name="new-bid"
+                        value="{{listing.initial_bid.bid}}"
+                        min="{{listing.initial_bid.bid}}"
+                        />
+                        <button class="btn btn-primary" type="submit">Place Bid</button>
+                    </form>
+                    <div class="d-flex col-12 pl-0 mt-1">
+                        {% if isInWatchlist %}
+                            <form
+                                action="{% url 'removeWatchlist' listing_id=listing.id %}"
+                                method="POST"
+                            >
+                                {% csrf_token %}
+                                <button class="btn btn-warning my-3" type="submit">x Watchlist</button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'addWatchlist' listing_id=listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-info my-3" type="submit">+ Watchlist</button>
+                            </form>
+                        {% endif %} 
+                        {% if isListingOwner %}
+                            <form action="{% url 'closeAuction'  listing_id=listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-danger my-3 ml-3" type="submit">Close Auction</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
         <strong>Category: </strong>{{ listing.category }}
         </p>
-        <p class="text-capitalize"><strong>Owner: </strong>{{ listing.owner }}</p>
+        <p class="text-capitalize"><strong>Listed by: </strong>{{ listing.owner }}</p>
         {% if listing.isActive %}
             <p class="text-capitalize"><strong>Listing Status: </strong>Active</p>
         {% else %}
