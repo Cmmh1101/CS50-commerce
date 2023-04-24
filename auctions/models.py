@@ -13,7 +13,7 @@ class Category(models.Model):
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="userBid")
-    bid = models.FloatField(default=0)
+    bid = models.IntegerField(default=0)
 
 
 class Listing(models.Model):

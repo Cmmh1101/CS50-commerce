@@ -165,7 +165,7 @@ def addComment(request, listing_id):
     })
 
 def updateBid(request, listing_id):
-    new_bid = request.POST.get("new-bid", False)
+    new_bid = request.POST.get("new-bid")
     listing = Listing.objects.get(pk=listing_id)
     currentUser = request.user
     isInWatchlist = request.user in listing.watchlist.all()
@@ -184,7 +184,6 @@ def updateBid(request, listing_id):
             "isListingOwner": isListingOwner
         })
     else:
-        print(new_bid)
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "The new bid should be grater than the current. Please try again!",
