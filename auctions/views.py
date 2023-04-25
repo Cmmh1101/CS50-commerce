@@ -102,16 +102,6 @@ def category(request):
     return render(request, 'auctions/category.html', {
         "categories": categories
     })
-    # if request.method == "POST": 
-    #     category_selected = request.POST['category']
-    #     category = Category.objects.get(categoryName=category_selected)
-    #     activeListings = Listing.objects.filter(isActive=True, category=category)
-    #     categories = Category.objects.all()
-    #     return render(request, "auctions/index.html", {
-    #         "activeListings": activeListings,
-    #         "categories": categories,
-    #         "activeFilter": category
-    #     })
 
 def filteredListings(request, category):
     category_selected = Category.objects.get(categoryName=category)
