@@ -118,7 +118,6 @@ def listing(request, listing_id):
     isInWatchlist = request.user in listing.watchlist.all()
     comments = Comment.objects.filter(listing=listing)
     isListingOwner = request.user == listing.owner
-    # bidWinner = 
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "user": user,
