@@ -1,24 +1,12 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} 
 
 {% block body %}
-    <h2>Active {{activeFilter}} Listings:</h2>
-    <a href="{% url 'category' %}">Filter by category</a>
-    {% comment %} <form action="{% url 'category' %}" method="POST" class="col-5 d-flex align-items-center m-3">
-      {% csrf_token %}
-      <label for="#category" class="mr-3">Category: </label>
-      <select class="form-control" name="category" id="category">
-        {% for category in categories %}
-          <option value="{{ category }}" select>
-              {{ category }}
-          </option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="btn btn-primary">Filter</button>
-    </form> {% endcomment %}
 
-    
-      <div class="row d-flex mt-5">
-        {% for listing in activeListings %}
+<h2>Active {{ category }} listings</h2>
+<a href="{% url 'category' %}">Filter by category</a>
+<ul>
+    <div class="row d-flex mt-5">
+        {% for listing in filteredListings %}
           <div class="card mb-3 mx-1 rounded" style="max-width: 540px;">
             <div class="row g-0">
               <div class="col-md-4">
@@ -36,9 +24,6 @@
           </div>
         {% endfor%}
       </div>
-      
-      
-
-    
+</ul>
 
 {% endblock %}
