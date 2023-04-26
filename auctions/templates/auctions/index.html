@@ -15,7 +15,7 @@
                 <h5 class="card-title text-capitalize">{{ listing.title }}</h5>
                 <p class="card-text">{{ listing.description }}</p>
                 <p class="card-text py-2"><strong>Price: $ {{ listing.initial_bid.bid }}</strong></p>
-                <a href="{% url 'listing' listing_id=listing.id %}" class="text-primary  ">View Details</a>
+                <a href="{% url 'listing' listing_id=listing.id %}" class="btn btn-primary">View Details</a>
               </div>
             </div>
           </div>
@@ -23,8 +23,4 @@
       {% endfor%}
     </div>
       
-      
-
-    
-
 {% endblock %}
