@@ -32,6 +32,8 @@
                             </div>
                         {% endif %}
                     {% endif %}
+                    <p>{{ listing.counter }} bid{%if listing.counter > 1%}s{% endif %} so far {% if isUserHigherBid %}<span class="text-capitalize font-weight-bold">- {{listing.initial_bid.user}}</span> your bid is the current bid{% endif %} </p>
+                    
                     <form class="d-flex align-items-center" action="{% url 'updateBid' listing_id=listing.id %}" method="POST">
                         {% csrf_token %}
                         <input

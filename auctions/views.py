@@ -45,7 +45,6 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -53,7 +52,6 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
@@ -118,12 +116,14 @@ def listing(request, listing_id):
     isInWatchlist = request.user in listing.watchlist.all()
     comments = Comment.objects.filter(listing=listing)
     isListingOwner = request.user == listing.owner
+    isUserHigherBid = request.user == listing.initial_bid.user
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "user": user,
         "isInWatchlist": isInWatchlist,
         "comments": comments,
-        "isListingOwner": isListingOwner
+        "isListingOwner": isListingOwner,
+        "isUserHigherBid": isUserHigherBid
     })
 
 def removeWatchlist(request, listing_id):
@@ -177,13 +177,15 @@ def updateBid(request, listing_id):
         updatedBid = Bid(bid=int(new_bid), user=currentUser)
         updatedBid.save()
         listing.initial_bid = updatedBid
+        counter = listing.counter + 1
+        listing.counter = counter
         listing.save()
         print(new_bid)
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "Your bid was suscessfully updated!",
             "update": True,
-            "isListingOwner": isListingOwner
+            "isListingOwner": isListingOwner,
         })
     else:
         return render(request, "auctions/listing.html", {
